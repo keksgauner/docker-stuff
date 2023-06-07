@@ -12,7 +12,7 @@ Additional docker compose files can be found at [PAPAMICA](https://github.com/PA
 
 ### phpmyadmin_mariadb
 
-- [phpmyadmin_mariadb](https://github.com/keksgauner/docker-stuff/tree/main/composes-files/phpmyadmin_mariadb.yml)
+- [phpmyadmin_mariadb](https://github.com/keksgauner/docker-stuff/tree/main/composes-files/default/phpmyadmin_mariadb.yml)
 
 # Nginx configurations
 
