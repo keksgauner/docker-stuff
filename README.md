@@ -8,9 +8,11 @@ I use these things myself for private purposes and may become obsolete when I no
 
 Here are docker-compose.yml files to support different applications. The Nginx configurations could be helpful here
 
-### Template
+Additional docker compose files can be found at [PAPAMICA](https://github.com/PAPAMICA/docker-compose-collection)
 
-- [Template](https://github.com/keksgauner/docker-stuff/tree/main/nginx/phpmyadmin)
+### phpmyadmin_mariadb
+
+- [phpmyadmin_mariadb](https://github.com/keksgauner/docker-stuff/tree/main/composes-files/phpmyadmin_mariadb.yml)
 
 # Nginx configurations
 
