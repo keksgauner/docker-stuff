@@ -18,9 +18,9 @@ Additional docker compose files can be found at [PAPAMICA](https://github.com/PA
 
 Is not exclusively for docker purposes but exists probably because of the docker compose files purposes.
 
-### Template
+### reserve_proxy
 
-- [Template](https://github.com/keksgauner/docker-stuff/tree/main/nginx/reserve-proxy)
+- [reserve_proxy](https://github.com/keksgauner/docker-stuff/tree/main/nginx/reserve-proxy.conf)
 
 # Pterodactyl Images
 
