@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-jammy
+FROM        eclipse-temurin:17-jdk-jammy
 
 RUN         apt update -y \
             && apt install -y \
@@ -26,7 +26,7 @@ WORKDIR     /home/container
 
 STOPSIGNAL SIGINT
 
-COPY        --chown=container:container ./../entrypoint.sh /entrypoint.sh
+COPY        --chown=container:container entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 CMD         ["/entrypoint.sh"]
