@@ -56,16 +56,6 @@ then
 else
     echo -e "${CYAN}config.json not exist"
 fi
-#V3
-if "${CLOUDNET_TYPE}" = "V3"; then
-  echo -e "Using V3 start opt"
-  CLOUDNET_OPT="-XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:-UseAdaptiveSizePolicy -XX:CompileThreshold=100 -Dfile.encoding=UTF-8"
-fi
-#V4
-if "${CLOUDNET_TYPE}" = "V4"; then
-  echo -e "Using V4 start opt"
-  CLOUDNET_OPT="-XX:+UseZGC -XX:+PerfDisableSharedMem -XX:+DisableExplicitGC"
-fi
 # Replace Startup Variables
 # shellcheck disable=SC2086
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
