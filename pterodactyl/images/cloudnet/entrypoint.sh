@@ -56,6 +56,7 @@ then
 else
     echo -e "${CYAN}config.json not exist"
 fi
+
 # Replace Startup Variables
 # shellcheck disable=SC2086
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
