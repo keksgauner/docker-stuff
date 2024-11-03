@@ -1,31 +1,29 @@
-version: '3.3'
-
 services:
   mariadb:
-    image: mariadb:latest
-    restart: always
-    container_name: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: secret_root_password
-      MYSQL_USER: user
-      MYSQL_PASSWORD: secret_user_password
-    expose:
-      - "3306"
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql/data:/var/lib/mysql
+    image: mariadb:latest
+    restart: always
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_root_password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret_user_password
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
       
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    container_name: phpmyadmin
-    expose:
-      - "80"
-    ports:
-      - "80:80"
-    environment:
-      - PMA_HOST=mariadb
-      - PMA_PORT=3306
-    depends_on:
-      - mariadb
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    container_name: phpmyadmin
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+    depends_on:
+      - mariadb
