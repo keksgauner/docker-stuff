@@ -7,19 +7,17 @@ services:
       MYSQL_ROOT_PASSWORD: secret_root_password
       MYSQL_USER: user
       MYSQL_PASSWORD: secret_user_password
-    expose:
-      - "3306"
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql
-      
+      - mysql_data:/var/lib/mysql
+    networks:
+      - phpmyadmin
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
     container_name: phpmyadmin
-    expose:
-      - "80"
     ports:
       - "80:80"
     environment:
@@ -27,3 +25,11 @@ services:
       - PMA_PORT=3306
     depends_on:
       - mariadb
+    networks:
+      - phpmyadmin
+
+volumes:
+  mysql_data:
+
+networks:
+  phpmyadmin:
