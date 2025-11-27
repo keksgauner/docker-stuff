@@ -7,12 +7,12 @@ services:
     network_mode: none
     command: --restart-containers mailcow_postfix-mailcow_1,mailcow_dovecot-mailcow_1
     volumes:
-      - traefik-certs-1:/etc/dokploy/traefik/dynamic:ro # mount your traefik certificate file
+      - /etc/dokploy/traefik/dynamic:/traefik:ro # mount your traefik certificate file
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./data/assets/ssl:/output:rw
     environment:
-      - DOMAIN=example.de
-      - ACME_FILE_PATH=/etc/dokploy/traefik/dynamic/acme.json # your traefik acme file
+      - DOMAIN=mail.example.de
+      - ACME_FILE_PATH=/traefik/acme.json # your traefik acme file
 
   nginx-mailcow:
     expose:
@@ -39,9 +39,6 @@ services:
       - traefik.docker.network=dokploy-network
     networks:
       dokploy-network:
-
-volumes:
-  traefik-certs-1:
 
 networks:
   dokploy-network:
