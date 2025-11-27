@@ -12,6 +12,7 @@ services:
       - ./data/assets/ssl:/output:rw
     environment:
       - DOMAIN=example.de
+      - ACME_FILE_PATH=/traefik/cloudflare-acme.json # your traefik acme file
 
   nginx-mailcow:
     expose:
