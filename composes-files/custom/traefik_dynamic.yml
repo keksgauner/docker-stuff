@@ -1,0 +1,43 @@
+http:
+  routers:
+    project-domain-xxxxxx-router-01:
+      rule: Host(`sub.domain.de`)
+      service: project-domain-xxxxxx-service-01
+      middlewares:
+        - redirect-to-https
+      entryPoints:
+        - web
+    project-domain-xxxxxx-router-websecure-01:
+      rule: Host(`sub.domain.de`)
+      service: project-domain-xxxxxx-service-01
+      middlewares: []
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    project-domain-xxxxxx-router-02:
+      rule: Host(`next.domain.de`)
+      service: project-domain-xxxxxx-service-02
+      middlewares:
+        - redirect-to-https
+      entryPoints:
+        - web
+    project-domain-xxxxxx-router-websecure-02:
+      rule: Host(`next.domain.de`)
+      service: project-domain-xxxxxx-service-02
+      middlewares: []
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+  services:
+    project-domain-xxxxxx-service-01:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8080
+        passHostHeader: true
+    project-domain-xxxxxx-service-02:
+      loadBalancer:
+        servers:
+          - url: http://127.0.0.1:8081
+        passHostHeader: true
