@@ -34,6 +34,15 @@ services:
       database:
         condition: service_healthy
     volumes:
+      # Live source code sync - changes on host immediately visible in container
+      - pteroca_app_src:/app/src
+      - pteroca_app_themes:/app/themes
+      - pteroca_app_config:/app/config
+      - pteroca_app_migrations:/app/migrations
+      - pteroca_app_plugins:/app/plugins
+      - pteroca_app_public:/app/public
+      - pteroca_app_tests:/app/tests
+      # Persistent data volumes
       - pteroca_app_var:/app/var
       - pteroca_app_uploads:/app/public/uploads
       - .env:/app/.env
@@ -47,9 +56,7 @@ services:
           echo 'Database not ready yet, waiting...'
           sleep 2
         done
-        echo 'Database is ready, clearing cache...'
-        php bin/console cache:clear --no-warmup
-        echo 'Installing assets...'
+        echo 'Database is ready, installing assets...'
         php bin/console assets:install public --symlink --relative
         echo 'Running migrations...'
         php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
@@ -58,8 +65,8 @@ services:
         mkdir -p /app/var/log /app/var/cache /app/public/uploads
         chown -R www-data:www-data /app/var /app/public/uploads
         chmod -R 775 /app/var /app/public/uploads
-        echo 'Starting production server...'
-        /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+        echo 'Starting PHP development server with router script...'
+        php -S 0.0.0.0:8000 -t public/ public/router.php
       "
     restart: unless-stopped
     env_file:
@@ -71,6 +78,12 @@ volumes:
   pteroca_database:
   pteroca_app_var:
   pteroca_app_uploads:
+  pteroca_app_src:
+  pteroca_app_themes:
+  pteroca_app_config:
+  pteroca_app_migrations:
+  pteroca_app_plugins:
+  pteroca_app_tests:
 
 networks:
   pteroca:

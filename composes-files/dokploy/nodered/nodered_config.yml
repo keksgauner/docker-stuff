@@ -1,0 +1,65 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883" # MQTT
+      - "9001:9001" # WebSockets (optional)
+    volumes:
+      - nodered_mosquitto_config:/mosquitto/config
+      - nodered_mosquitto_data:/mosquitto/data
+      - nodered_mosquitto_log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      - nodered_network
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered
+    user: "1000:1000"
+    ports:
+      - "1880:1880" # Webinterface
+    depends_on:
+      - mosquitto
+    volumes:
+      - nodered_data:/data
+    restart: unless-stopped
+    networks:
+      - nodered_network
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086" # API
+    volumes:
+      - nodered_influxdb:/var/lib/influxdb
+    restart: unless-stopped
+    networks:
+      - nodered_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "1000:1000"
+    ports:
+      - "3000:3000" # Webinterface
+    depends_on:
+      - influxdb
+    volumes:
+      - nodered_grafana:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - nodered_network
+
+volumes:
+  nodered_data:
+  nodered_influxdb:
+  nodered_grafana:
+  nodered_mosquitto_config:
+  nodered_mosquitto_data:
+  nodered_mosquitto_log:
+
+networks:
+  nodered_network:
+    driver: bridge
