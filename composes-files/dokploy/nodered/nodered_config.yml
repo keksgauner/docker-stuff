@@ -1,7 +1,6 @@
 services:
   mosquitto:
     image: eclipse-mosquitto:latest
-    container_name: mosquitto
     ports:
       - "1883:1883" # MQTT
       - "9001:9001" # WebSockets (optional)
@@ -15,8 +14,7 @@ services:
 
   nodered:
     image: nodered/node-red:latest
-    container_name: nodered
-    user: "1000:1000"
+    #    user: "1000:1000"
     ports:
       - "1880:1880" # Webinterface
     depends_on:
@@ -29,7 +27,6 @@ services:
 
   influxdb:
     image: influxdb:1.8
-    container_name: influxdb
     ports:
       - "8086:8086" # API
     volumes:
@@ -40,8 +37,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
-    user: "1000:1000"
+    #    user: "1000:1000"
     ports:
       - "3000:3000" # Webinterface
     depends_on:
