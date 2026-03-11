@@ -1,0 +1,113 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    container_name: nodered_homeassistant
+    ports:
+      - 8123:8123
+    env_file:
+      - .env
+    volumes:
+      - nodered_homeassistant_config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://homeassistant:8123"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    container_name: nodered_mosquitto
+    ports:
+      - 1883:1883 # MQTT
+      - 9001:9001 # WebSockets (optional)
+    env_file:
+      - .env
+    volumes:
+      - nodered_mosquitto_config:/mosquitto/config
+      - nodered_mosquitto_data:/mosquitto/data
+      - nodered_mosquitto_log:/mosquitto/log
+    networks:
+      nodered:
+    healthcheck:
+      test: ["CMD", "curl", "-X", "Upgrade", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nodered:
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    container_name: nodered_panel
+    ports:
+      - "1880:1880" # Webinterface
+    env_file:
+      - .env
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    volumes:
+      - nodered_data:/data
+    #    user: "1000:1000"
+    networks:
+      nodered:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1880"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  influxdb:
+    image: influxdb:latest
+    restart: unless-stopped
+    container_name: nodered_influxdb
+    ports:
+      - "8086:8086" # API
+    env_file:
+      - .env
+    volumes:
+      - nodered_influxdb:/var/lib/influxdb
+    networks:
+      nodered:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000" # Webinterface
+    env_file:
+      - .env
+    volumes:
+      - nodered_grafana:/var/lib/grafana
+    #    user: "1000:1000"
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      nodered:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  nodered_homeassistant_config:
+  nodered_data:
+  nodered_influxdb:
+  nodered_grafana:
+  nodered_mosquitto_config:
+  nodered_mosquitto_data:
+  nodered_mosquitto_log:
+
+networks:
+  nodered:
+    driver: bridge

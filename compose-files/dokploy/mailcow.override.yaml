@@ -2,8 +2,8 @@
 services:
   certdumper:
     image: ghcr.io/kereis/traefik-certs-dumper:latest
-    container_name: traefik_certdumper
-    restart: unless-stopped
+    restart: always
+    container_name: traefik-certdumper
     network_mode: none
     command: --restart-containers mailcow_postfix-mailcow_1,mailcow_dovecot-mailcow_1
     volumes:
@@ -38,7 +38,7 @@ services:
       - traefik.http.services.mailcow-svc.loadbalancer.server.port=8083
       - traefik.docker.network=dokploy-network
     networks:
-      dokploy-network:
+      - dokploy-network
 
 networks:
   dokploy-network:
