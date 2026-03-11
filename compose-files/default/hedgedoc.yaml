@@ -1,0 +1,29 @@
+# TODO
+services:
+  database:
+    image: postgres:17.7-alpine
+    environment:
+      - POSTGRES_USER=hedgedoc
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=hedgedoc
+    volumes:
+      - database:/var/lib/postgresql/data
+    restart: always
+
+  app:
+    # Make sure to use the latest release from https://hedgedoc.org/latest-release
+    image: quay.io/hedgedoc/hedgedoc:latest
+    environment:
+      - CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc
+      - CMD_DOMAIN=notes.domain.de
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_ALLOW_ORIGIN=["https://notes.domain.de"]
+    volumes:
+      - uploads:/hedgedoc/public/uploads
+    depends_on:
+      - database
+    restart: always
+
+volumes:
+  database:
+  uploads:
