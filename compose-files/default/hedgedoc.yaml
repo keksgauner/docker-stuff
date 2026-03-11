@@ -1,29 +1,47 @@
-# TODO
 services:
   database:
-    image: postgres:17.7-alpine
-    environment:
-      - POSTGRES_USER=hedgedoc
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=hedgedoc
-    volumes:
-      - database:/var/lib/postgresql/data
+    image: postgres:latest
     restart: always
+    container_name: hedgedoc_postgres
+    environment:
+      POSTGRES_USER: hedgedoc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret_user_password}
+      POSTGRES_DB: hedgedoc
+    env_file:
+      - .env
+    volumes:
+      - hedgedoc_database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready -U hedgedoc"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  app:
+  panel:
     # Make sure to use the latest release from https://hedgedoc.org/latest-release
     image: quay.io/hedgedoc/hedgedoc:latest
-    environment:
-      - CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc
-      - CMD_DOMAIN=notes.domain.de
-      - CMD_PROTOCOL_USESSL=true
-      - CMD_ALLOW_ORIGIN=["https://notes.domain.de"]
-    volumes:
-      - uploads:/hedgedoc/public/uploads
-    depends_on:
-      - database
     restart: always
+    container_name: hedgedoc_panel
+    ports:
+      - 3000:3000
+    environment:
+      CMD_DB_URL: postgres://hedgedoc:${POSTGRES_PASSWORD:-secret_user_password}@database:5432/hedgedoc
+      CMD_DOMAIN: ${HEDGEDOC_DOMAIN:-localhost}
+      CMD_PROTOCOL_USESSL: true
+      CMD_ALLOW_ORIGIN: ${HEDGEDOC_ALLOW_ORIGIN:-["https://localhost"]}
+    env_file:
+      - .env
+    volumes:
+      - hedgedoc_uploads:/hedgedoc/public/uploads
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
-  database:
-  uploads:
+  hedgedoc_database:
+  hedgedoc_uploads:

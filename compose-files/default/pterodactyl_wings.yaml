@@ -2,8 +2,8 @@ x-common:
   database: &db-environment
     # Do not remove the "&db-password" from the end of the line below, it is important
     # for Panel functionality.
-    MYSQL_PASSWORD: &db-password "secret_user_password"
-    MYSQL_ROOT_PASSWORD: "secret_root_password"
+    MYSQL_PASSWORD: &db-password ${MYSQL_PASSWORD:-secret_user_password}
+    MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret_root_password}
   panel: &panel-environment
     APP_URL: "http://localhost"
     # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
@@ -78,6 +78,7 @@ services:
       DB_CONNECTION: mariadb
       DB_HOST: database
       DB_PORT: 3306
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
     env_file:
       - .env
     volumes:

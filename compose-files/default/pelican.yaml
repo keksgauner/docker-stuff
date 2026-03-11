@@ -1,23 +1,24 @@
-# TOTO
 services:
   panel:
     image: "ghcr.io/pelican-dev/panel:latest"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - "pelican-data:/pelican-data"
-      - "pelican-logs:/var/www/html/storage/logs"
-      - "../files/Caddyfile:/etc/caddy/Caddyfile"
-
+    restart: always
+    container_name: pelican_panel
     environment:
-      - XDG_DATA_HOME=/pelican-data
-      - APP_URL=${APP_URL}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - CADDY_TRUSTED_PROXIES_C=${CADDY_TRUSTED_PROXIES_C}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      XDG_DATA_HOME: /pelican-data
+      APP_URL: ${APP_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+      CADDY_TRUSTED_PROXIES_C: ${CADDY_TRUSTED_PROXIES_C}
+    volumes:
+      - pelican_data:/pelican-data
+      - pelican_logs:/var/www/html/storage/logs
+      #- "./Caddyfile:/etc/caddy/Caddyfile" # Mount Caddyfile for dynamic configuration
     healthcheck:
-      disable: true
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
-  pelican-data:
-  pelican-logs:
+  pelican_data:
+  pelican_logs:
