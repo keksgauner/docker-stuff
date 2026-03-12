@@ -31,6 +31,10 @@ docker exec -it <container> /bin/bash
 docker exec -it <container> /bin/sh
 
 docker compose exec <service> <command>
+
+# For mappings
+extra_hosts:
+  - "host.docker.internal:host-gateway"
 ```
 
 ---
