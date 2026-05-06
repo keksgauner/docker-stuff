@@ -26,7 +26,6 @@ volumes:
   nginxproxymanager_data:
   nginxproxymanager_letsencrypt:
 
-# docker network create nginxproxymanager
 networks:
   nginxproxymanager:
     external: true
