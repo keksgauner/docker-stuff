@@ -1,3 +1,4 @@
+name: nextcloud_aio
 services:
   database:
     image: mariadb:latest

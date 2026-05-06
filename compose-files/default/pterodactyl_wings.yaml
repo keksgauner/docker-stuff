@@ -28,6 +28,7 @@ x-common:
 # The remainder of this file likely does not need to be changed. Please only make modifications
 # below if you understand what you are doing.
 #
+name: pterodactyl_wings
 services:
   database:
     image: mariadb:latest

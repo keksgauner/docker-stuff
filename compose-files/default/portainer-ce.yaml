@@ -1,3 +1,4 @@
+name: portainer_ce
 services:
   portainer:
     image: portainer/portainer-ce:latest

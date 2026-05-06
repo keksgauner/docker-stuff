@@ -1,3 +1,4 @@
+name: adminer_mariadb
 services:
   mariadb:
     image: mariadb:latest

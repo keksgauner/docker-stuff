@@ -1,3 +1,4 @@
+name: phpmyadmin_mariadb
 services:
   mariadb:
     image: mariadb:latest
